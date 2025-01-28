@@ -1,6 +1,7 @@
 
 import { getComments,addComment,} from '../services/comment-services.js';
 import Comment from '../db/models/Comment.js';
+import handlebars from 'handlebars';
 
 export const getAllCommentsController = async (req, res, next) => {
 try {
@@ -22,11 +23,8 @@ export const addCommentController = async (req, res) => {
 
 const timestamp = Date.now();
   const oldDataTimestamp = await Comment.find({ timestamp });
-  
   const listOfExistingTimestamps = oldDataTimestamp.map((doc) => doc.timestamp);
-  
   const { comment, name, email } = req.body;
-
   if (listOfExistingTimestamps.includes(String(timestamp))) {
     return res
       .status(400)
@@ -39,6 +37,24 @@ const timestamp = Date.now();
     name,
     email
   });
+  // const newComment = await addComment(req.body);
+  console.log(req.body);
+
+  const emailTemplateSource = await fs.readFile(verifyEmailPath, 'utf-8');
+  const emailTemplate = handlebars.compile(emailTemplateSource);
+
+  const html = emailTemplate({
+    app_domain,
+  });
+
+  const verifyEmail = {
+    subject: 'Verify Email',
+    to: email,
+    html,
+    // `<a target="_blank" href="${app_domain}/auth/verify?token=${token}">Click to verify your email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
 
   res.status(201).json({
     status: 201,

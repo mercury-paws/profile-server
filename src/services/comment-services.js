@@ -2,10 +2,8 @@ import Comment from '../db/models/Comment.js';
 
   export const getComments = async () => {
     try {
-
-        const data = await Comment.find();
+        const data = await Comment.find({ verify: true });
     return {
-
       data
     };
     } catch (error) {

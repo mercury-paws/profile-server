@@ -30,8 +30,8 @@ export default function setupServer() {
   const corsOptions = {
     origin: 'http://127.0.0.1:5500',
     credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'], // amended put to patch
-    // allowedHeaders: ['Content-Type', 'Authorization'], // added headers
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'], 
+    // allowedHeaders: ['Content-Type', 'Authorization'],
   };
 
   app.use(cors(corsOptions));
@@ -44,6 +44,7 @@ export default function setupServer() {
     console.log(`Time: ${new Date().toLocaleString()}`);
     next();
   });
+
   app.use(router);
 
 //   app.use(notFoundHandler);

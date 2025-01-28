@@ -1,12 +1,13 @@
 import { Schema, model } from 'mongoose';
 import { mongooseSaveError, setUpdateSettings } from './hooks.js';
-import {validateEmail } from '../../constants/constants.js';
+import {validateEmail, validateString } from '../../constants/constants.js';
 const commentSchema = new Schema(
   {
     name: {
         type: String,
         minLength: [3, 'Must be at least 3, got {VALUE}'],
         maxLength: 20,
+        validate: validateString,
         required: true,
       },
       email: {
@@ -21,7 +22,12 @@ const commentSchema = new Schema(
         minLength: [3, 'Must be at least 3, got {VALUE}'],
         maxLength: 150,
         unique: false,
-      }
+      },
+      verify: {
+        type: Boolean,
+        default: false,
+        required: true,
+      },
   },
   {
     timestamps: true,
