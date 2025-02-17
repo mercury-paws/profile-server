@@ -12,4 +12,5 @@ export const commentAddSchema = Joi.object({
       'Email should be of the following format: name@example.com',
     'any.required': 'Email is required',
   }),
+  comment: Joi.string().min(3).max(20).required(),
 });

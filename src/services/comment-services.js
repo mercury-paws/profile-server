@@ -13,3 +13,7 @@ import Comment from '../db/models/Comment.js';
   };
 
   export const addComment = (data) => Comment.create(data);
+
+  export const findComment = (data) => Comment.findOne(data);
+
+  export const updateComment = (filter, data) => Comment.findOneAndUpdate(filter, data);

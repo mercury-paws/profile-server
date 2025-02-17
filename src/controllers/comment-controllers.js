@@ -1,7 +1,18 @@
-
-import { getComments,addComment,} from '../services/comment-services.js';
+import fs from 'node:fs/promises';
+import { getComments,addComment, findComment, updateComment} from '../services/comment-services.js';
 import Comment from '../db/models/Comment.js';
 import handlebars from 'handlebars';
+import { TEMPLATES_DIR } from '../constants/path.js';
+import path from 'node:path';
+import { env } from '../utils/env.js';
+import sendEmailtoCheckComment from '../utils/sendEmail.js';
+import jwt from "jsonwebtoken"
+import createHttpError from 'http-errors';
+
+const jwt_secret = env('JWT_SECRET');
+const app_domain = env('APP_DOMAIN', 'http://localhost:3000');
+const verifyEmailPath = path.join(TEMPLATES_DIR, 'verify-comment.html');
+const BASE_EMAIL = env('BASE_EMAIL');
 
 export const getAllCommentsController = async (req, res, next) => {
 try {
@@ -25,6 +36,7 @@ const timestamp = Date.now();
   const oldDataTimestamp = await Comment.find({ timestamp });
   const listOfExistingTimestamps = oldDataTimestamp.map((doc) => doc.timestamp);
   const { comment, name, email } = req.body;
+
   if (listOfExistingTimestamps.includes(String(timestamp))) {
     return res
       .status(400)
@@ -37,7 +49,14 @@ const timestamp = Date.now();
     name,
     email
   });
-  // const newComment = await addComment(req.body);
+
+  const payload = {
+    id: data._id,
+    email,
+  };
+  
+  const token = jwt.sign(payload, jwt_secret);
+
   console.log(req.body);
 
   const emailTemplateSource = await fs.readFile(verifyEmailPath, 'utf-8');
@@ -45,16 +64,19 @@ const timestamp = Date.now();
 
   const html = emailTemplate({
     app_domain,
+    comment: data.comment,
+    name: data.name,
+    email: data.email,
+    token,
   });
 
   const verifyEmail = {
-    subject: 'Verify Email',
-    to: email,
+    subject: 'MP-platform comment verification',
+    to: BASE_EMAIL,
     html,
-    // `<a target="_blank" href="${app_domain}/auth/verify?token=${token}">Click to verify your email</a>`,
   };
 
-  await sendEmail(verifyEmail);
+  await sendEmailtoCheckComment(verifyEmail);
 
   res.status(201).json({
     status: 201,
@@ -62,3 +84,19 @@ const timestamp = Date.now();
     data,
   });
 };
+
+export const addCommentControllerConfirmation = async (req, res)=>{
+  const { token } = req.query;
+    try {
+      const { id, email } = jwt.verify(token, jwt_secret);
+      const comment = await findComment({ _id: id, email });
+      if (!comment) {
+        throw createHttpError(404, 'User not found');
+      }
+      await updateComment({ email }, { verify: true });
+      res.status(200).json({ message: 'Comment verified successfully!' });
+      } catch (error) {
+      throw createHttpError(401, error.message);
+    }
+  };
+
