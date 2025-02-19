@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { emailRegexp } from '../constants/constants.js';
 
-export const commentAddSchema = Joi.object({
+export const contactAddSchema = Joi.object({
   name: Joi.string().min(3).max(20).required().messages({
     'string.min': 'Username should have at least {#limit} characters',
     'string.max': 'Username should have at most {#limit} characters',
@@ -12,5 +12,5 @@ export const commentAddSchema = Joi.object({
       'Email should be of the following format: name@example.com',
     'any.required': 'Email is required',
   }),
-  comment: Joi.string().min(3).max(50).required(),
+  comment: Joi.string().min(10).max(120).required(),
 });

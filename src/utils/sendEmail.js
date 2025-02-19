@@ -19,9 +19,9 @@ const nodemailerConfig = {
 
 const transport = nodemailer.createTransport(nodemailerConfig);
 
-const sendEmailtoCheckComment = (data) => {
+const sendEmail = (data) => {
   const email = { ...data, from: SMTP_USER };
   return transport.sendMail(email);
 };
 
-export default sendEmailtoCheckComment;
+export default sendEmail;

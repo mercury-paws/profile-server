@@ -24,6 +24,4 @@ commentRouter.post(
   ctrlWrapper(addCommentController),
 );
 
-
-
 export default commentRouter;

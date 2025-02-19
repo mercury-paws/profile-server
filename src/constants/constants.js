@@ -12,5 +12,5 @@ export const validateString = {
   validator: function (v) {
     return stringRegexp.test(v);
   },
-  message: (props) => `${props.value} is not a valid email!`,
+  message: (props) => `${props.value} is not a valid text!`,
 };

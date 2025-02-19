@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
-import { getComments,addComment, findComment, updateComment} from '../services/comment-services.js';
-import Comment from '../db/models/Comment.js';
+import { getContacts, addContact, findContact, updateContact} from '../services/contact-services.js';
+import Contact from '../db/models/Contact.js';
 import handlebars from 'handlebars';
 import { TEMPLATES_DIR } from '../constants/path.js';
 import path from 'node:path';
@@ -11,29 +11,27 @@ import createHttpError from 'http-errors';
 
 const jwt_secret = env('JWT_SECRET');
 const app_domain = env('APP_DOMAIN', 'http://localhost:3000');
-const verifyEmailPath = path.join(TEMPLATES_DIR, 'verify-comment.html');
+const contactMeEmailPath = path.join(TEMPLATES_DIR, 'contact-me.html');
 const BASE_EMAIL = env('BASE_EMAIL');
 
-export const getAllCommentsController = async (req, res, next) => {
+export const getAllContactsController = async (req, res, next) => {
 try {
-    const data = await getComments();
-  res.json({
+    const data = await getContacts();
+    res.json({
     status: 200,
-    message: 'Successfully found comments',
+    message: 'Successfully found contacts',
     data,
   });
 } catch (error) {
     next(error)
 }
-
-  
 };
 
 
-export const addCommentController = async (req, res) => {
+export const addContactController = async (req, res) => {
 
 const timestamp = Date.now();
-  const oldDataTimestamp = await Comment.find({ timestamp });
+  const oldDataTimestamp = await Contact.find({ timestamp });
   const listOfExistingTimestamps = oldDataTimestamp.map((doc) => doc.timestamp);
   const { comment, name, email } = req.body;
 
@@ -43,7 +41,7 @@ const timestamp = Date.now();
       .json({ status: 400, message: 'This time is already used' });
   }
 
-  const data = await addComment({
+  const data = await addContact({
     timestamp,
     comment,
     name,
@@ -59,7 +57,7 @@ const timestamp = Date.now();
 
   console.log(req.body);
 
-  const emailTemplateSource = await fs.readFile(verifyEmailPath, 'utf-8');
+  const emailTemplateSource = await fs.readFile(contactMeEmailPath, 'utf-8');
   const emailTemplate = handlebars.compile(emailTemplateSource);
 
   const html = emailTemplate({
@@ -71,7 +69,7 @@ const timestamp = Date.now();
   });
 
   const verifyEmail = {
-    subject: 'MP-platform comment verification',
+    subject: 'MP-platform contact me request',
     to: BASE_EMAIL,
     html,
   };
@@ -80,21 +78,21 @@ const timestamp = Date.now();
 
   res.status(201).json({
     status: 201,
-    message: 'Successfully added comment!',
+    message: 'Successfully added contact!',
     data,
   });
 };
 
-export const addCommentControllerConfirmation = async (req, res)=>{
+export const addContactControllerConfirmation = async (req, res)=>{
   const { token } = req.query;
     try {
       const { id, email } = jwt.verify(token, jwt_secret);
-      const comment = await findComment({ _id: id, email });
+      const comment = await findContact({ _id: id, email });
       if (!comment) {
         throw createHttpError(404, 'User not found');
       }
-      await updateComment({ email }, { verify: true });
-      res.status(200).json({ message: 'Comment verified successfully!' });
+      await updateContact({ email }, { verify: true });
+      res.status(200).json({ message: 'Contact verified successfully!' });
       } catch (error) {
       throw createHttpError(401, error.message);
     }
