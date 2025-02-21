@@ -12,6 +12,7 @@ import createHttpError from 'http-errors';
 const jwt_secret = env('JWT_SECRET');
 const app_domain = env('APP_DOMAIN', 'http://localhost:3000');
 const contactMeEmailPath = path.join(TEMPLATES_DIR, 'contact-me.html');
+const contactMeConfirmationEmailPath = path.join(TEMPLATES_DIR, 'confirmation.html');
 const BASE_EMAIL = env('BASE_EMAIL');
 
 export const getAllContactsController = async (req, res, next) => {
@@ -74,7 +75,29 @@ const timestamp = Date.now();
     html,
   };
 
-  await sendEmail(verifyEmail);
+  const emailConfirmationTemplateSource = await fs.readFile(contactMeConfirmationEmailPath, 'utf-8');
+  const emailConfirmationTemplate = handlebars.compile(emailConfirmationTemplateSource);
+
+  const htmlConfirmation = emailConfirmationTemplate({
+    app_domain,
+    comment: data.comment,
+    name: data.name,
+    email: data.email,
+    token,
+  });
+
+  const confirmationEmail = {
+    subject: 'MP-platform confirmation',
+    to: data.email,
+    html: htmlConfirmation,
+  };
+
+  const confirmed = await sendEmail(verifyEmail);
+
+  if(confirmed){
+    await sendEmail(confirmationEmail);
+  }
+  
 
   res.status(201).json({
     status: 201,

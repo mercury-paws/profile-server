@@ -12,6 +12,7 @@ import createHttpError from 'http-errors';
 const jwt_secret = env('JWT_SECRET');
 const app_domain = env('APP_DOMAIN', 'http://localhost:3000');
 const verifyEmailPath = path.join(TEMPLATES_DIR, 'verify-comment.html');
+const confirmationEmailPath = path.join(TEMPLATES_DIR, 'confirmation.html');
 const BASE_EMAIL = env('BASE_EMAIL');
 
 export const getAllCommentsController = async (req, res, next) => {
@@ -76,7 +77,26 @@ const timestamp = Date.now();
     html,
   };
 
-  await sendEmail(verifyEmail);
+  const emailConfirmationTemplateSource = await fs.readFile(confirmationEmailPath, 'utf-8');
+  const emailConfirmationTemplate = handlebars.compile(emailConfirmationTemplateSource);
+
+  const htmlConfirmation = emailConfirmationTemplate({
+    comment: data.comment,
+    name: data.name,
+    email: data.email,
+  });
+
+  const confirmationEmail = {
+    subject: 'MP-platform comment verification',
+    to: data.email,
+    html: htmlConfirmation,
+  };
+
+  const confirmed = await sendEmail(verifyEmail);
+
+  if(confirmed){
+    await sendEmail(confirmationEmail);
+  }
 
   res.status(201).json({
     status: 201,
