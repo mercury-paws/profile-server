@@ -28,7 +28,7 @@ export default function setupServer() {
   // };
 
   const corsOptions = {
-    origin: 'http://127.0.0.1:5500',
+    origin: 'https://mercury-paws.github.io/portfolio/',
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE'], 
     // allowedHeaders: ['Content-Type', 'Authorization'],

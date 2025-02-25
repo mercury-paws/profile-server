@@ -20,7 +20,7 @@ const commentSchema = new Schema(
         type: String,
         required: true,
         minLength: [3, 'Must be at least 3, got {VALUE}'],
-        maxLength: 150,
+        maxLength: 250,
         unique: false,
       },
       verify: {

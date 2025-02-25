@@ -12,5 +12,5 @@ export const contactAddSchema = Joi.object({
       'Email should be of the following format: name@example.com',
     'any.required': 'Email is required',
   }),
-  comment: Joi.string().pattern(stringRegexp).min(10).max(120).required(),
+  comment: Joi.string().pattern(stringRegexp).min(10).max(250).required(),
 });

@@ -21,7 +21,7 @@ const contactSchema = new Schema(
         type: String,
         required: true,
         minLength: [10, 'Must be at least 10, got {VALUE}'],
-        maxLength: 150,
+        maxLength: 250,
         unique: false,
       },
       verify: {
