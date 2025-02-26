@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { env } from './utils/env.js';
 import router from './routes/index.js';
+import helmet from 'helmet';
 
 // import notFoundHandler from './middlewares/notFoundHandler.js';
 // import errorHandler from './middlewares/errorHandler.js';
@@ -13,25 +14,19 @@ const PORT = Number(env('PORT', '3000'));
 export default function setupServer() {
   const app = express();
 
+  app.use(helmet());
+
+  // app.disable('x-powered-by');
 //   const logger = pino({
 //     transport: {
 //       target: 'pino-pretty',
 //     },
 //   });
 
-  // const corsOptions = {
-  //   origin:
-  //     process.env.NODE_ENV === 'production'
-  //       ? 'https://water-app-f.vercel.app/'
-  //       : 'http://localhost:5173',
-  //   credentials: true,
-  // };
-
   const corsOptions = {
     origin: 'https://mercury-paws.github.io',
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE'], 
-    // allowedHeaders: ['Content-Type', 'Authorization'],
   };
 
   app.use(cors(corsOptions));
