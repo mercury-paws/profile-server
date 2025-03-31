@@ -31,7 +31,10 @@ const catArticleSchema = new Schema(
         type: String,
         required: true,
         unique: true,
-      },
+        },
+      photo: {
+      type: String,
+    },
   },
   {
     timestamps: true,
