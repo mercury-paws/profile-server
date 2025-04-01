@@ -5,6 +5,7 @@ import { sortByConstants, sortOrderConstants } from '../constants/constants.js';
 import createHttpError from 'http-errors';
 
 export const getAllBlogController = async (req, res, next) => {
+  const { page = 1 } = req.query;
     const sortBy = sortByConstants[2];
     const sortOrder = sortOrderConstants[0];
   
@@ -13,6 +14,8 @@ try {
         {
             sortBy,
             sortOrder,
+            page,
+            perPage: 5,
           }
     );
   res.json({

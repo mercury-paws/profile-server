@@ -1,6 +1,6 @@
 export const emailRegexp = /[-.\w]+@([\w-]+\.)+[\w-]+/;
 export const stringRegexp = /^[^<>/\\;'"(){}|&]+$/;
-export const sortOrderConstants = ['asc'];
+export const sortOrderConstants = ['asc', 'dsc'];
 export const sortByConstants = ['day', 'time', 'timestamp'];
 
 export const validateEmail = {
