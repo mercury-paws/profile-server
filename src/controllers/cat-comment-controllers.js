@@ -16,8 +16,10 @@ const confirmationEmailPath = path.join(TEMPLATES_DIR, 'confirmation.html');
 const BASE_EMAIL = env('BASE_EMAIL');
 
 export const getAllCatCommentsController = async (req, res, next) => {
-try {
-    const data = await getCatComments();
+  try {
+  const { id } = req.params;
+    const data = await getCatComments(id);
+
   res.json({
     status: 200,
     message: 'Successfully found comments',
@@ -37,7 +39,7 @@ const timestamp = Date.now();
   const oldDataTimestamp = await CatComment.find({ timestamp });
   const listOfExistingTimestamps = oldDataTimestamp.map((doc) => doc.timestamp);
   const { comment, name, email } = req.body;
-
+ const { id } = req.params;
   if (listOfExistingTimestamps.includes(String(timestamp))) {
     return res
       .status(400)
@@ -48,7 +50,8 @@ const timestamp = Date.now();
     timestamp,
     comment,
     name,
-    email
+    email, 
+    articleId: id,
   });
 
   const payload = {

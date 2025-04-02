@@ -1,8 +1,8 @@
 import CatComment from "../db/models/CatComments.js";
 
-  export const getCatComments = async () => {
+  export const getCatComments = async (id) => {
     try {
-        const data = await CatComment.find({ verify: true });
+        const data = await CatComment.find({ verify: true, articleId: id });
     return {
       data
     };

@@ -28,7 +28,12 @@ const catCommentSchema = new Schema(
         type: Boolean,
         default: false,
         required: true,
-      },
+    },
+      articleId: {
+      type: Schema.Types.ObjectId,
+      ref: 'catarticle',
+      required: true,
+    },
   },
   {
     timestamps: true,
