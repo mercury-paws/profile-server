@@ -8,9 +8,9 @@ import calcPaginationData from '../utils/calcPaginationData.js';
       perPage = parseInt(perPage, 10);
       const skip = (page - 1) * perPage;
 
-      const totalItems = await Blog.find().countDocuments();
+      const totalItems = await Blogcz.find().countDocuments();
 
-      const items = await Blog.find()
+      const items = await Blogcz.find()
         .sort({ [sortBy]: sortOrder })
         .skip(skip)
         .limit(perPage);
@@ -33,4 +33,4 @@ import calcPaginationData from '../utils/calcPaginationData.js';
     
   };
 
-  export const getOneBlogCz = (data) => Blog.findOne(data);
+  export const getOneBlogCz = (data) => Blogcz.findOne(data);
