@@ -32,7 +32,12 @@ const blogSchema = new Schema(
         required: true,
         // validate: validateString,
         unique: true,
-      },
+    },
+    order: {
+      type: Number,
+      required: true, 
+      unique: true    
+    },
   },
   {
     timestamps: true,

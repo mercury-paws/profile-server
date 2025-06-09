@@ -1,7 +1,8 @@
 import Blogcz from '../db/models/Blogcz.js';
 import calcPaginationData from '../utils/calcPaginationData.js';
 
-  export const getBlogCz = async ({ page, perPage, sortBy, sortOrder,
+export const getBlogCz = async ({ page, perPage,
+  // sortBy, sortOrder,
 }) => {
     try {
       page = parseInt(page, 10); 
@@ -11,7 +12,8 @@ import calcPaginationData from '../utils/calcPaginationData.js';
       const totalItems = await Blogcz.find().countDocuments();
 
       const items = await Blogcz.find()
-        .sort({ [sortBy]: sortOrder })
+        // .sort({ [sortBy]: sortOrder })
+        .sort({ order: -1 })
         .skip(skip)
         .limit(perPage);
       

@@ -37,7 +37,7 @@ const blogSchema = new Schema(
       type: Number,
       required: true, 
       unique: true    
-    }
+    },
   },
   {
     timestamps: true,

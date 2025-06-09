@@ -1,7 +1,8 @@
 import Blog from '../db/models/Blog.js';
 import calcPaginationData from '../utils/calcPaginationData.js';
 
-  export const getBlog = async ({ page, perPage, sortBy, sortOrder,
+export const getBlog = async ({ page, perPage,
+  // sortBy, sortOrder,
 }) => {
     try {
       page = parseInt(page, 10); 
