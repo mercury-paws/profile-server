@@ -11,7 +11,8 @@ import calcPaginationData from '../utils/calcPaginationData.js';
       const totalItems = await Blog.find().countDocuments();
 
       const items = await Blog.find()
-        .sort({ [sortBy]: sortOrder })
+        // .sort({ [sortBy]: sortOrder })
+        .sort({ order: -1 })
         .skip(skip)
         .limit(perPage);
       

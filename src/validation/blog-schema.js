@@ -22,4 +22,8 @@ export const blogSchema = Joi.object({
     'string.max': 'text should have at most {#limit} characters',
     'any.required': 'text is required',
   }),
+  order: Joi.number()
+    .integer()
+    .min(1)
+    .required()
 });
